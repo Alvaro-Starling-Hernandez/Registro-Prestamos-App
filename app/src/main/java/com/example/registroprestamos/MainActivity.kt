@@ -118,6 +118,17 @@ fun consultaPersonasScreen(navHostController: NavHostController) {
 
 @Composable
 fun RegistroPersonasScreen(navHostController: NavHostController) {
+    var nombre by rememberSaveable() {
+        mutableStateOf("")
+    }
+
+    var email by rememberSaveable() {
+        mutableStateOf("")
+    }
+
+    var salario by rememberSaveable() {
+        mutableStateOf("")
+    }
 
     val listaOcupaciones =
         listOf<String>("Profesor", "Ingeniero", "Doctor", "Herrero", "Carpintero")
@@ -134,8 +145,8 @@ fun RegistroPersonasScreen(navHostController: NavHostController) {
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { },
+                value = nombre,
+                onValueChange = { nombre = it },
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = "Nombres")
@@ -148,8 +159,8 @@ fun RegistroPersonasScreen(navHostController: NavHostController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { },
+                value = email,
+                onValueChange = { email = it },
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = "Email")
@@ -166,8 +177,8 @@ fun RegistroPersonasScreen(navHostController: NavHostController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { },
+                value = salario,
+                onValueChange = { salario = it},
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = "Salario")
