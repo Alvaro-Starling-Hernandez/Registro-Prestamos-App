@@ -16,6 +16,7 @@ class PersonaViewModel @Inject constructor(
     val personasRepository: PersonasRepository
 ) : ViewModel() {
 
+    var id by mutableStateOf(0)
     var nombres by mutableStateOf("")
     var email by mutableStateOf("")
     var ocupacion by mutableStateOf(0)
@@ -28,6 +29,7 @@ class PersonaViewModel @Inject constructor(
         viewModelScope.launch {
             personasRepository.insertar(
                 Persona(
+                    personaId = id,
                     nombres = nombres,
                     email = email,
                     ocupacionId = ocupacion,

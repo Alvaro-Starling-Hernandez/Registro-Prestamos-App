@@ -17,11 +17,12 @@ import com.example.registroprestamos.ui.componentes.RowOcupacion
 import com.example.registroprestamos.utils.Screen
 
 @Composable
-fun consultaOcupacionesScreen(
+fun ConsultaOcupacionesScreen(
     viewModel: OcupacionViewModel = hiltViewModel(),
     navHostController: NavHostController
 ) {
 
+    val entrada = 2
     Scaffold(
 
         topBar = {
@@ -34,7 +35,7 @@ fun consultaOcupacionesScreen(
         floatingActionButton = {
 
             FloatingActionButton(
-                onClick = { navHostController.navigate(Screen.RegistroOcupacionesScreen.route) }
+                onClick = { navHostController.navigate(Screen.RegistroOcupacionesScreen.route + "/${entrada}") }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }

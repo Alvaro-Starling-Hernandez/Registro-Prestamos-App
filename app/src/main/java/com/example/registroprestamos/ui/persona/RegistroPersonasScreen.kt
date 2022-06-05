@@ -6,11 +6,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -18,11 +15,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.registroprestamos.model.Ocupacion
+import com.example.registroprestamos.model.Persona
 import com.example.registroprestamos.ui.componentes.OcupacionesSpinner
 
 @Composable
 fun RegistroPersonasScreen(
     navHostController: NavHostController,
+    persona: Persona?,
     viewModel: PersonaViewModel = hiltViewModel()
 ) {
 
@@ -48,9 +48,19 @@ fun RegistroPersonasScreen(
                 .absolutePadding(16.dp, 16.dp, 16.dp, 16.dp)
         ) {
 
+            persona?.let {
+                viewModel.id = persona.personaId
+            }
+
+            var nombresText by remember {
+                mutableStateOf(
+                    persona?.nombres ?: ""
+                )
+            }
+
             OutlinedTextField(
-                value = viewModel.nombres,
-                onValueChange = { viewModel.nombres = it },
+                value = nombresText,
+                onValueChange = { nombresText = it },
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = "Nombres")
@@ -66,9 +76,15 @@ fun RegistroPersonasScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            var emailText by remember {
+                mutableStateOf(
+                    persona?.email ?: ""
+                )
+            }
+
             OutlinedTextField(
-                value = viewModel.email,
-                onValueChange = { viewModel.email = it },
+                value = emailText,
+                onValueChange = { emailText = it },
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = "Email")
@@ -81,13 +97,19 @@ fun RegistroPersonasScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            OcupacionesSpinner()
+            OcupacionesSpinner(persona = persona)
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            var salarioText by remember {
+                mutableStateOf(
+                    persona?.salario?.toString() ?: ""
+                )
+            }
+
             OutlinedTextField(
-                value = viewModel.salario,
-                onValueChange = { viewModel.salario = it },
+                value = salarioText,
+                onValueChange = { salarioText = it },
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = "Salario")
@@ -102,6 +124,9 @@ fun RegistroPersonasScreen(
 
             Button(
                 onClick = {
+                    viewModel.nombres = nombresText
+                    viewModel.email = emailText
+                    viewModel.salario = salarioText
                     viewModel.Guardar()
                     navHostController.navigateUp()
                 },

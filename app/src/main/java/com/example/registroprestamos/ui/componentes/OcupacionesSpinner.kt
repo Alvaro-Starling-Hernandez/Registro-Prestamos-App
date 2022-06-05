@@ -1,6 +1,5 @@
 package com.example.registroprestamos.ui.componentes
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -12,16 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.registroprestamos.model.Ocupacion
 import com.example.registroprestamos.model.Persona
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Work
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.registroprestamos.ui.ocupacion.OcupacionViewModel
@@ -33,13 +28,18 @@ fun RowOcupacion(
     ocupacion: Ocupacion,
     navHostController: NavHostController
 ) {
+    val entrada = 1
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
             .height(25.dp)
             .clickable {
-                navHostController.navigate(Screen.RegistroOcupacionesScreen.route)
+                navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                    "ocupacion",
+                    ocupacion
+                )
+                navHostController.navigate(Screen.RegistroOcupacionesScreen.route + "/${entrada}")
             }
     ) {
         Text(ocupacion.ocupacionId.toString())
@@ -52,13 +52,15 @@ fun RowPersona(
     persona: Persona,
     navHostController: NavHostController
 ) {
+    val entrada = 1
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
             .height(25.dp)
             .clickable {
-                navHostController.navigate(Screen.RegistroPersonasScreen.route)
+                navHostController.currentBackStackEntry?.savedStateHandle?.set("persona", persona)
+                navHostController.navigate(Screen.RegistroPersonasScreen.route + "/${entrada}")
             }
     ) {
         Text(persona.personaId.toString())
@@ -70,14 +72,23 @@ fun RowPersona(
 @Composable
 fun OcupacionesSpinner(
     viewModel: OcupacionViewModel = hiltViewModel(),
-    personaViewModel: PersonaViewModel = hiltViewModel(),
+    persona: Persona?,
+    personaViewModel: PersonaViewModel = hiltViewModel()
 ) {
 
     var mExpanded by remember { mutableStateOf(false) }
 
     val ocupaciones = viewModel.ocupaciones.collectAsState(initial = emptyList())
 
-    var mSelectedText by remember { mutableStateOf("") }
+    var mSelectedText by remember {
+        mutableStateOf(
+            if (persona!=null) {
+                persona.ocupacionId.toString()
+            } else {
+                ""
+            }
+        )
+    }
 
     var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -85,6 +96,7 @@ fun OcupacionesSpinner(
         Icons.Filled.KeyboardArrowUp
     else
         Icons.Filled.KeyboardArrowDown
+
 
     Column(
         Modifier

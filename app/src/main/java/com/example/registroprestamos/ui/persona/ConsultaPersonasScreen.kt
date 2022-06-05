@@ -21,7 +21,7 @@ fun ConsultaPersonasScreen(
     navHostController: NavHostController,
     viewModel: PersonaViewModel = hiltViewModel()
 ) {
-
+    val entrada = 2
     Scaffold(
 
         topBar = {
@@ -33,7 +33,7 @@ fun ConsultaPersonasScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navHostController.navigate(Screen.RegistroPersonasScreen.route) }
+                onClick = { navHostController.navigate(Screen.RegistroPersonasScreen.route+ "/${entrada}") }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
