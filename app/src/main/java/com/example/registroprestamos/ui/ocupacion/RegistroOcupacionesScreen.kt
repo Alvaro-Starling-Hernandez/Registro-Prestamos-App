@@ -1,3 +1,5 @@
+@file:Suppress("IMPLICIT_CAST_TO_ANY", "ControlFlowWithEmptyBody")
+
 package com.example.registroprestamos.ui.ocupacion
 
 import androidx.compose.foundation.clickable
@@ -24,6 +26,8 @@ fun RegistroOcupacionesScreen(
     ocupacion: Ocupacion?
 ) {
 
+    var nameError by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -46,7 +50,7 @@ fun RegistroOcupacionesScreen(
                 .absolutePadding(16.dp, 16.dp, 16.dp, 16.dp)
         ) {
 
-            var nombreText by remember {
+            var nombreText by rememberSaveable {
                 mutableStateOf(
                     ocupacion?.nombre ?: ""
                 )
@@ -58,23 +62,44 @@ fun RegistroOcupacionesScreen(
 
             OutlinedTextField(
                 value = nombreText,
-                onValueChange = { nombreText = it },
+                onValueChange = {
+                    nombreText = it
+                    nameError = false
+                },
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = "Nombre")
                 },
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Work, contentDescription = null)
-                }
+                },
+                isError = nameError
+            )
+
+            val assistiveElementText = if(nameError) "Error: Obligatrio" else "*Obligatorio"
+            val assitiveElementColor = if(nameError){
+                MaterialTheme.colors.error
+            }else{
+                MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+            }
+
+            Text(
+                text = assistiveElementText,
+                color = assitiveElementColor,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 16.dp)
             )
 
             Spacer(modifier = Modifier.height(200.dp))
 
             Button(
                 onClick = {
-                    viewModel.nombre = nombreText
-                    viewModel.Guardar()
-                    navHostController.navigateUp()
+                    nameError = nombreText.isBlank()
+                    if(!nameError){
+                        viewModel.nombre = nombreText
+                        viewModel.Guardar()
+                        navHostController.navigateUp()
+                    }
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
